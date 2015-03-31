@@ -3,7 +3,7 @@ package edu.iastate.cs228.hw4;
 /**
  *  
  * @author Steve Kautz 
- * this is just a test
+ *
  */
 
 
