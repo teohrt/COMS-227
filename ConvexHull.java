@@ -2,7 +2,8 @@ package edu.iastate.cs228.hw4;
 
 /**
  *  
- * @author
+ * @author Trace Ohrt 
+ * 
  *
  */
 
@@ -90,6 +91,24 @@ public class ConvexHull
 	public ConvexHull(int n) throws IllegalArgumentException 
 	{
 		// TODO 
+		
+		if (n<1) throw new IllegalArgumentException();
+		
+		//random for point creation
+		Random rand = new Random();
+		//array initialization
+		points = new Points[numPoints];
+		//loop creates random point and places it in array
+		for(int i=0; i<n ; i++){
+			//random numbers between -50 and 50
+			int x=rand(101)-50;
+			int y=rand(101)-50;
+			Point p = new Point(x, y);
+			points[i]=p;
+		}
+		
+		
+		
 	}
 	
 	/**
