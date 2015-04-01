@@ -92,15 +92,14 @@ public class ConvexHull
 	 */
 	public ConvexHull(int n) throws IllegalArgumentException 
 	{
-		// TODO 
+	
 		
-		if (n<1) throw new IllegalArgumentException();
+		if (n<1) throw new IllegalArgumentException(); //obligatory throws
 		
 		numPoints=n;
-		//random for point creation
-		Random rand = new Random();
-		//array initialization
-		points = new Point[numPoints];
+		Random rand = new Random(); //random for point creation	
+		points = new Point[numPoints]; //array initialization
+		
 		//loop creates random point and places it in array
 		for(int i=0; i<n ; i++){
 			//random numbers between -50 and 50
