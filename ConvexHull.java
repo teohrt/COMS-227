@@ -92,18 +92,14 @@ public class ConvexHull
 	 */
 	public ConvexHull(int n) throws IllegalArgumentException 
 	{
-	
-		
-		if (n<1) throw new IllegalArgumentException(); //obligatory throws
+		if (n<1) throw new IllegalArgumentException();				 //obligatory throws
 		
 		numPoints=n;
-		Random rand = new Random(); //random for point creation	
-		points = new Point[numPoints]; //array initialization
+		Random rand = new Random();									 //random for point creation	
+		points = new Point[numPoints]; 								//array initialization
 		
-		//loop creates random point and places it in array
-		for(int i=0; i<n ; i++){
-			//random numbers between -50 and 50
-			int x=rand.nextInt(101)-50;
+		for(int i=0; i<n ; i++){									//loop creates random point and places it in array
+			int x=rand.nextInt(101)-50;								//random numbers between -50 and 50 for x and y coordinates of point
 			int y=rand.nextInt(101)-50;
 			Point p = new Point(x, y);
 			points[i]=p;
@@ -129,6 +125,14 @@ public class ConvexHull
 	public ConvexHull(String inputFileName) throws FileNotFoundException, InputMismatchException
 	{
 		// TODO 
+		
+		File file = new File(inputFileName);			
+		Scanner scanner = new Scanner(file);			//scanner for input file
+		
+		while(scanner.hasNext()){						//creates points while the file has points to create
+			int x;										//variables to store x and y coordinates for point
+			int y;
+		}
 	}
 
 	
