@@ -16,6 +16,7 @@ import java.io.PrintWriter;
 import java.util.Random; 
 import java.util.Scanner;
 
+
 /**
  * 
  * This class implements Graham's scan that constructs the convex hull of a finite set of points. 
