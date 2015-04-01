@@ -96,6 +96,7 @@ public class ConvexHull
 		
 		if (n<1) throw new IllegalArgumentException();
 		
+		numPoints=n;
 		//random for point creation
 		Random rand = new Random();
 		//array initialization
@@ -190,7 +191,11 @@ public class ConvexHull
 	public String toString()
 	{
 		// TODO 
-		return null; 
+		String s="";
+		for (int i=0; i<numPoints; i++){
+			s+= "(" + (int)points[i].getX() + ", " + (int)points[i].getY() + ")   ";
+		}
+		return s; 
 	}
 	
 	
