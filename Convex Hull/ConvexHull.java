@@ -34,6 +34,7 @@ public class ConvexHull
 	 * The array points[] holds an input set of Points, which may be randomly generated or 
 	 * input from a file.  Duplicates may appear. 
 	 */
+	private ArrayList<Point> points2;
 	private Point[] points;    
 	private int numPoints;            // size of points[]
 	
@@ -128,11 +129,17 @@ public class ConvexHull
 		
 		File file = new File(inputFileName);			
 		Scanner scanner = new Scanner(file);			//scanner for input file
+		points2 = new ArrayList<Point>(); 				//initialize arraylist
+		
 		
 		while(scanner.hasNext()){						//creates points while the file has points to create
-			int x;										//variables to store x and y coordinates for point
-			int y;
+			int x=scanner.nextInt();					//variables to store x and y coordinates for point
+			int y=scanner.nextInt();
+			Point p = new Point(x, y);
+			points2.add(p);
+			
 		}
+		scanner.close();
 	}
 
 	
