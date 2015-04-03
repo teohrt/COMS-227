@@ -140,6 +140,17 @@ public class ConvexHull
 			
 		}
 		scanner.close();
+		
+		//fill array with data in arraylist
+		numPoints=points2.size();
+		points = new Point[points2.size()];
+		
+		for(int i=0; i<points2.size(); i++){
+			points[i]=points2.get(i);
+		}
+		
+		
+		
 	}
 
 	
