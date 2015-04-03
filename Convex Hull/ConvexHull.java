@@ -43,7 +43,8 @@ public class ConvexHull
 	 * Lowest point from points[]; and in case of a tie, the leftmost one of all such points. 
 	 * To be set by the private method lowestPoint(). 
 	 */
-	private Point lowestPoint; 
+	//FIX VISIBILITY!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!private
+	public Point lowestPoint; 
 
 	
 	/**
@@ -93,14 +94,14 @@ public class ConvexHull
 	 */
 	public ConvexHull(int n) throws IllegalArgumentException 
 	{
-		if (n<1) throw new IllegalArgumentException();				 //obligatory throws
+		if (n<1) throw new IllegalArgumentException();			 //obligatory throws
 		
 		numPoints=n;
-		Random rand = new Random();									 //random for point creation	
-		points = new Point[numPoints]; 								//array initialization
+		Random rand = new Random();								 //random for point creation	
+		points = new Point[numPoints]; 							//array initialization
 		
-		for(int i=0; i<n ; i++){									//loop creates random point and places it in array
-			int x=rand.nextInt(101)-50;								//random numbers between -50 and 50 for x and y coordinates of point
+		for(int i=0; i<n ; i++){								//loop creates random point and places it in array
+			int x=rand.nextInt(101)-50;							//random numbers between -50 and 50 for x and y coordinates of point
 			int y=rand.nextInt(101)-50;
 			Point p = new Point(x, y);
 			points[i]=p;
@@ -128,12 +129,12 @@ public class ConvexHull
 		// TODO 
 		
 		File file = new File(inputFileName);			
-		Scanner scanner = new Scanner(file);			//scanner for input file
-		points2 = new ArrayList<Point>(); 				//initialize arraylist
+		Scanner scanner = new Scanner(file);	//scanner for input file
+		points2 = new ArrayList<Point>(); 		//initialize arraylist
 		
 		
-		while(scanner.hasNext()){						//creates points while the file has points to create
-			int x=scanner.nextInt();					//variables to store x and y coordinates for point
+		while(scanner.hasNext()){				//creates points while the file has points to create
+			int x=scanner.nextInt();			//variables to store x and y coordinates for point
 			int y=scanner.nextInt();
 			Point p = new Point(x, y);
 			points2.add(p);
@@ -211,10 +212,16 @@ public class ConvexHull
 	 */
 	public String toString()
 	{
-		// TODO 
+		// TODO - not sorted according to specs
 		String s="";
-		for (int i=0; i<numPoints; i++){
+		int count=0;
+		for (int i=1; i<numPoints; i++){
+			if (count==5){
+				s+="\n";
+				count=0;
+			}
 			s+= "(" + (int)points[i].getX() + ", " + (int)points[i].getY() + ")   ";
+			count++;
 		}
 		return s; 
 	}
@@ -305,6 +312,19 @@ public class ConvexHull
 	public void lowestPoint()
 	{
 		// TODO 
+		int indexOfSmallest=0;											
+		
+		for(int i=1; i<numPoints; i++){									
+			if (points[indexOfSmallest].getY()>points[i].getY()){		//if point is smaller than previously selected point
+				indexOfSmallest=i;										//update variable
+			}
+			else if(points[indexOfSmallest].getY()==points[i].getY()){	//if there's a y value tie
+				if (points[indexOfSmallest].getX()>points[i].getX()){	//smallest x value gets precedence
+					indexOfSmallest=i;				}
+			}
+		}
+		lowestPoint=points[indexOfSmallest];
+		
 	}
 	
 	
