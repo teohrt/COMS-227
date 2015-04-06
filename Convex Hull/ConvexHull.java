@@ -106,9 +106,6 @@ public class ConvexHull
 			Point p = new Point(x, y);
 			points[i]=p;
 		}
-		
-		
-		
 	}
 	
 	/**
@@ -125,33 +122,25 @@ public class ConvexHull
 	 * @throws InputMismatchException   when the input file contains an odd number of integers
 	 */
 	public ConvexHull(String inputFileName) throws FileNotFoundException, InputMismatchException
-	{
-		// TODO 
-		
+	{		
 		File file = new File(inputFileName);			
 		Scanner scanner = new Scanner(file);	//scanner for input file
 		points2 = new ArrayList<Point>(); 		//initialize arraylist
-		
 		
 		while(scanner.hasNext()){				//creates points while the file has points to create
 			int x=scanner.nextInt();			//variables to store x and y coordinates for point
 			int y=scanner.nextInt();
 			Point p = new Point(x, y);
 			points2.add(p);
-			
 		}
 		scanner.close();
 		
-		//fill array with data in arraylist
-		numPoints=points2.size();
-		points = new Point[points2.size()];
+		numPoints=points2.size();				//initialize Array with arraylist data	
+		points = new Point[numPoints];
 		
-		for(int i=0; i<points2.size(); i++){
+		for(int i=0; i<numPoints; i++){			//fill array with data in arraylist
 			points[i]=points2.get(i);
-		}
-		
-		
-		
+		}		
 	}
 
 	
