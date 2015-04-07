@@ -34,7 +34,8 @@ public class ConvexHull
 	 * input from a file.  Duplicates may appear. 
 	 */
 	private ArrayList<Point> points2;
-	private Point[] points;    
+	//visibility!!!!!!!!!!!!!!!!!!!!!!!!!!!!private
+	public Point[] points;    
 	private int numPoints;            // size of points[]
 	
 
@@ -78,6 +79,11 @@ public class ConvexHull
 	 */
 	private PureStack<Point> vertexStack;  
 
+	/**
+	 * PointComparator
+	 */
+	//visibility!!!!!!!!!!!!private
+	public PointComparator pc;
 	
 
 	// ------------
@@ -316,6 +322,7 @@ public class ConvexHull
 			}
 		}
 		lowestPoint=points[indexOfSmallest];
+		pc = new PointComparator(lowestPoint);
 		
 	}
 	
@@ -337,6 +344,8 @@ public class ConvexHull
 	public void setUpScan()
 	{
 		// TODO 
+		quickSort();
+		
 	}
 
 	
@@ -349,7 +358,7 @@ public class ConvexHull
 	 */
 	public void quickSort()
 	{
-		// TODO 
+		quickSortRec(0, points.length-1);
 	}
 	
 	
@@ -359,12 +368,48 @@ public class ConvexHull
 	 * @param first  starting index of the subarray
 	 * @param last   ending index of the subarray
 	 */
-	private void quickSortRec(int first, int last)
+	private void quickSortRec(int lowerIndex, int higherIndex)
 	{
-		// TODO
+		int i= lowerIndex;
+		int j= higherIndex;
+		//pivot is middle index
+		Point pivot = points[partition(lowerIndex, higherIndex)];
+		//Point pivot = points[6];
+		//divide into two arrays
+		while (i <= j){
+			//finds point on left of pivot which is greater and swaps 
+			//with a point on the left which is less than the pivot
+			while (pc.compare(points[i], pivot)<0){
+				i++;
+			}
+			while (pc.compare(pivot, points[j])<0){
+				j--;
+			}
+			if (i<=j){
+				swapPoints(i, j);
+				i++;
+				j--;
+			}
+		}
+		//recursion!
+		if (lowerIndex < j){
+			quickSortRec(lowerIndex, j);
+		}
+		if (i < higherIndex){
+			quickSortRec(i, higherIndex);
+		}
 	}
 	
-	
+	/**
+	 * quicksort helper method.
+	 * This method swaps points in the points[] array
+	 */
+	private void swapPoints(int i, int j){
+		Point temp = points[i];
+		points[i]=points[j];
+		points[j]=temp;
+		
+	}
 	/**
 	 * Operates on the subarray of points[] with indices between first and last.
 	 * 
@@ -374,8 +419,7 @@ public class ConvexHull
 	 */
 	private int partition(int first, int last)
 	{
-		// TODO 
-		return 0; 
+		return first+(last-first)/2;
 	}	
 		
 			
