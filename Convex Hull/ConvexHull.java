@@ -9,7 +9,6 @@ package edu.iastate.cs228.hw4;
 
 import java.util.ArrayList;
 import java.util.Arrays;
-import java.awt.Point;
 import java.io.File;
 import java.io.FileNotFoundException; 
 import java.util.InputMismatchException; 
@@ -179,6 +178,10 @@ public class ConvexHull
 	public void GrahamScan()
 	{
 		// TODO 
+		lowestPoint(); 	//step one
+		setUpScan();	//step two
+		
+		
 	}
 
 	
@@ -204,7 +207,7 @@ public class ConvexHull
 		// TODO - not sorted according to specs
 		String s="";
 		int count=0;
-		for (int i=1; i<numPoints; i++){
+		for (int i=0; i<numPoints; i++){
 			if (count==5){
 				s+="\n";
 				count=0;
