@@ -50,7 +50,7 @@ public class Point
 	@Override
     public String toString() 
 	{
-		// TODO 
-		return null; 
+		String s="(" + x + ", " + y + ")";
+		return s; 
 	}
 }
