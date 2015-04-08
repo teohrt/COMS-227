@@ -11,6 +11,7 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.io.File;
 import java.io.FileNotFoundException; 
+import java.io.UnsupportedEncodingException;
 import java.util.InputMismatchException; 
 import java.io.PrintWriter;
 import java.util.Random; 
@@ -257,7 +258,19 @@ public class ConvexHull
 	 */
 	public void hullToFile() throws IllegalStateException 
 	{
-		// TODO 
+if (hullVertices == null || hullVertices.length == 0) throw new IllegalStateException();	//obligatory throws
+		
+		try {
+			PrintWriter pw = new PrintWriter("hullVertices.txt");
+			for (int i=0; i<hullVertices.length; i++){
+				pw.println(hullVertices[i].getX() + " " + hullVertices[i].getY());
+			}
+			pw.close();
+
+		} catch (FileNotFoundException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
 	}
 
 
@@ -274,9 +287,20 @@ public class ConvexHull
 	 */
 	public void pointsToFile() throws IllegalStateException 
 	{
-		// TODO 
-	}
+		if (pointsNoDuplicate == null || pointsNoDuplicate.length == 0) throw new IllegalStateException();	//obligatory throws
+		
+		try {
+			PrintWriter pw = new PrintWriter("points.txt");
+			for (int i=0; i<pointsNoDuplicate.length; i++){
+				pw.println(pointsNoDuplicate[i].getX() + " " + pointsNoDuplicate[i].getY());
+			}
+			pw.close();
 
+		} catch (FileNotFoundException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+	}
 
 	/**
 	 * Also implement this method for testing purpose. 
@@ -290,7 +314,18 @@ public class ConvexHull
 	 */
 	public void pointsScannedToFile() throws IllegalStateException 
 	{
-		// TODO 
+		if (pointsToScan == null || pointsToScan.length == 0) throw new IllegalStateException();	//obligatory throws
+		try {
+			PrintWriter pw = new PrintWriter("pointsScanned.txt");
+			for (int i=0; i<pointsToScan.length; i++){
+				pw.println(pointsToScan[i].getX() + " " + pointsToScan[i].getY());
+			}
+			pw.close();
+
+		} catch (FileNotFoundException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
 	}
 
 
@@ -311,7 +346,6 @@ public class ConvexHull
 	 */
 	public void lowestPoint()
 	{
-		// TODO 
 		int indexOfSmallest=0;											
 
 		for(int i=1; i<numPoints; i++){									
@@ -345,6 +379,8 @@ public class ConvexHull
 	 */
 	public void setUpScan()
 	{
+		quickSort();
+
 		ArrayList <Point> temp = new ArrayList<Point>();;	//temp araylist to store points[] for editing
 		for (int i =0; i<points.length; i++){				//populates new list
 			temp.add(points[i]);
@@ -358,15 +394,15 @@ public class ConvexHull
 		for (int i=0; i<pointsNoDuplicate.length; i++){		//populates it
 			pointsNoDuplicate[i]=temp.get(i);
 		}
-		
+
 		for (int i=0; i<temp.size(); i++){					//removes close points with same polar angle
 			for (int j=1; j<temp.size(); j++){
 				if (pc.comparePolarAngle(temp.get(i), temp.get(j))==0){
 					switch(pc.compareDistance(temp.get(i), temp.get(j))){
 					case -1:{ temp.remove(i);
-							break;}
+					break;}
 					case 1:{ temp.remove(j);
-						break;
+					break;
 					}
 					}
 				}
@@ -376,7 +412,7 @@ public class ConvexHull
 		for (int i=0; i<pointsToScan.length; i++){		//populates it
 			pointsToScan[i]=temp.get(i);
 		}
-		
+
 
 	}
 
