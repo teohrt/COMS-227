@@ -28,7 +28,7 @@ public class ConvexHull
 	// ---------------
 	// Data Structures 
 	// ---------------
-	
+
 	/**
 	 * The array points[] holds an input set of Points, which may be randomly generated or 
 	 * input from a file.  Duplicates may appear. 
@@ -37,7 +37,7 @@ public class ConvexHull
 	//visibility!!!!!!!!!!!!!!!!!!!!!!!!!!!!private
 	public Point[] points;    
 	private int numPoints;            // size of points[]
-	
+
 
 	/**
 	 * Lowest point from points[]; and in case of a tie, the leftmost one of all such points. 
@@ -46,32 +46,34 @@ public class ConvexHull
 	//FIX VISIBILITY!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!private
 	public Point lowestPoint; 
 
-	
+
 	/**
 	 * This array stores the same set of points from points[] with all duplicates removed. 
 	 */
-	private Point[] pointsNoDuplicate; 
+	//Fix visibility!!!!!!!!!!!!!!!!!!!!private
+	public Point[] pointsNoDuplicate; 
 	private int numDistinctPoints;    // size of pointsNoDuplicate[]
 
-	
+
 	/**
 	 * Points on which Graham's scan is performed.  They are copied from pointsNoDuplicate[] 
 	 * with some points removed.  More specifically, if multiple points from the array 
 	 * pointsNoDuplicate[] have the same polar angle with respect to lowestPoint, only the one 
 	 * furthest away from lowestPoint is included. 
 	 */
-	private Point[] pointsToScan; 
+	//fiz visibility!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!private
+	public Point[] pointsToScan; 
 	private int numPointsToScan;     // size of pointsToScan[]
-	
-	
+
+
 	/**
 	 * Vertices of the convex hull in counterclockwise order are stored in the array 
 	 * hullVertices[], with hullVertices[0] storing lowestPoint. 
 	 */
 	private Point[] hullVertices;
 	private int numHullVertices;     // number of vertices on the convex hull
-	
-	
+
+
 	/**
 	 * Stack used by Grahma's scan to store the vertices of the convex hull of the points 
 	 * scanned so far.  At the end of the scan, it stores the hull vertices in the 
@@ -84,13 +86,13 @@ public class ConvexHull
 	 */
 	//visibility!!!!!!!!!!!!private
 	public PointComparator pc;
-	
+	private Point pivot;
 
 	// ------------
 	// Constructors
 	// ------------
-	
-	
+
+
 	/**
 	 * Generate n random points within the box range [-50, 50] x [-50, 50]. Duplicates are 
 	 * allowed. Store the points in the private array points[]. 
@@ -100,11 +102,11 @@ public class ConvexHull
 	public ConvexHull(int n) throws IllegalArgumentException 
 	{
 		if (n<1) throw new IllegalArgumentException();			 //obligatory throws
-		
+
 		numPoints=n;
 		Random rand = new Random();								 //random for point creation	
 		points = new Point[numPoints]; 							//array initialization
-		
+
 		for(int i=0; i<n ; i++){								//loop creates random point and places it in array
 			int x=rand.nextInt(101)-50;							//random numbers between -50 and 50 for x and y coordinates of point
 			int y=rand.nextInt(101)-50;
@@ -112,7 +114,7 @@ public class ConvexHull
 			points[i]=p;
 		}
 	}
-	
+
 	/**
 	 * Read integers from an input file.  Every pair of integers represent the x- and y-coordinates 
 	 * of a point.  Generate the points and store them in the private array points[]. The total 
@@ -131,7 +133,7 @@ public class ConvexHull
 		File file = new File(inputFileName);			
 		Scanner scanner = new Scanner(file);	//scanner for input file
 		points2 = new ArrayList<Point>(); 		//initialize arraylist
-		
+
 		while(scanner.hasNext()){				//creates points while the file has points to create
 			int x=scanner.nextInt();			//variables to store x and y coordinates for point
 			int y=scanner.nextInt();
@@ -139,21 +141,21 @@ public class ConvexHull
 			points2.add(p);
 		}
 		scanner.close();
-		
+
 		numPoints=points2.size();				//initialize Array with arraylist data	
 		points = new Point[numPoints];
-		
+
 		for(int i=0; i<numPoints; i++){			//fill array with data in arraylist
 			points[i]=points2.get(i);
 		}		
 	}
 
-	
-	
+
+
 	// -------------
 	// Graham's scan
 	// -------------
-	
+
 	/**
 	 * This method carries out Graham's scan in several steps below: 
 	 * 
@@ -169,33 +171,33 @@ public class ConvexHull
 	 *     3) Perform Graham's scan on the points in the array pointsToScan[]. To initialize the 
 	 *        scan, push pointsToScan[0] and pointsToScan[1] onto vertexStack.  
 	 * 
-     *     4) As the scan terminates, vertexStack holds the vertices of the convex hull.  Pop the 
-     *        vertices out of the stack and add them to the array hullVertices[], starting at index
-     *        numHullVertices - 1, and decreasing the index toward 0.  Set numHullVertices.  
-     *        
-     * Two special cases below must be handled: 
-     * 
-     *     1) The array pointsToScan[] could contain just one point, in which case the convex
-     *        hull is the point itself. 
-     *     
-     *     2) Or it could contain two points, in which case the hull is the line segment 
-     *        connecting them.   
+	 *     4) As the scan terminates, vertexStack holds the vertices of the convex hull.  Pop the 
+	 *        vertices out of the stack and add them to the array hullVertices[], starting at index
+	 *        numHullVertices - 1, and decreasing the index toward 0.  Set numHullVertices.  
+	 *        
+	 * Two special cases below must be handled: 
+	 * 
+	 *     1) The array pointsToScan[] could contain just one point, in which case the convex
+	 *        hull is the point itself. 
+	 *     
+	 *     2) Or it could contain two points, in which case the hull is the line segment 
+	 *        connecting them.   
 	 */
 	public void GrahamScan()
 	{
 		// TODO 
 		lowestPoint(); 	//step one
 		setUpScan();	//step two
-		
-		
+
+
 	}
 
-	
-	
+
+
 	// ------------------------------------------------------------
 	// toString() and Files for Convex Hull Plotting in Mathematica
 	// ------------------------------------------------------------
-	
+
 	/**
 	 * The string displays the convex hull with vertices in counter clockwise order starting at  
 	 * lowestPoint.  When printed out, it will list five points per line with three blanks in 
@@ -223,8 +225,8 @@ public class ConvexHull
 		}
 		return s; 
 	}
-	
-	
+
+
 	/** 
 	 * For plotting in Mathematica. 
 	 * 
@@ -236,12 +238,12 @@ public class ConvexHull
 	 * For instance, the file "hull.txt" generated for the convex hull example in the project 
 	 * description will have the following content: 
 	 * 
-     *  -7 -10 
-     *  0 -10
-     *  10 5
-     *  0  8
-     *  -10 0
-     *  -7 -10 
+	 *  -7 -10 
+	 *  0 -10
+	 *  10 5
+	 *  0  8
+	 *  -10 0
+	 *  -7 -10 
 	 * 
 	 * Note that lowestPoint (-7, -10) has its coordinates listed in the first and last lines.  This 
 	 * is for Mathematica to plot the hull as a polygon rather than one missing the edge connecting
@@ -257,8 +259,8 @@ public class ConvexHull
 	{
 		// TODO 
 	}
-	
-	
+
+
 	/**
 	 * For plotting in Mathematica. 
 	 * 
@@ -275,7 +277,7 @@ public class ConvexHull
 		// TODO 
 	}
 
-	
+
 	/**
 	 * Also implement this method for testing purpose. 
 	 * 
@@ -291,11 +293,11 @@ public class ConvexHull
 		// TODO 
 	}
 
-	
+
 	// ---------------
 	// Private Methods
 	// ---------------
-	
+
 	/**
 	 * Find the point in the array points[] that has the smallest y-coordinate.  In case of a tie, 
 	 * pick the point with the smallest x-coordinate. Set the variable lowestPoint to the found 
@@ -311,7 +313,7 @@ public class ConvexHull
 	{
 		// TODO 
 		int indexOfSmallest=0;											
-		
+
 		for(int i=1; i<numPoints; i++){									
 			if (points[indexOfSmallest].getY()>points[i].getY()){		//if point is smaller than previously selected point
 				indexOfSmallest=i;										//update variable
@@ -323,10 +325,10 @@ public class ConvexHull
 		}
 		lowestPoint=points[indexOfSmallest];
 		pc = new PointComparator(lowestPoint);
-		
+
 	}
-	
-	
+
+
 	/**
 	 * Call quickSort() on points[].  After the sorting, duplicates in points[] will appear next 
 	 * to each other, with those equal to lowestPoint at the beginning of the array.  
@@ -343,12 +345,42 @@ public class ConvexHull
 	 */
 	public void setUpScan()
 	{
-		// TODO 
-		quickSort();
+		ArrayList <Point> temp = new ArrayList<Point>();;	//temp araylist to store points[] for editing
+		for (int i =0; i<points.length; i++){				//populates new list
+			temp.add(points[i]);
+		}
+		for (int i=1; i<temp.size(); i++){					//removes duplicates
+			if (temp.get(i).equals(temp.get(i-1))){
+				temp.remove(i);
+			}
+		}
+		pointsNoDuplicate = new Point[temp.size()];			//initializes pointsNoDuplicate
+		for (int i=0; i<pointsNoDuplicate.length; i++){		//populates it
+			pointsNoDuplicate[i]=temp.get(i);
+		}
 		
+		for (int i=0; i<temp.size(); i++){					//removes close points with same polar angle
+			for (int j=1; j<temp.size(); j++){
+				if (pc.comparePolarAngle(temp.get(i), temp.get(j))==0){
+					switch(pc.compareDistance(temp.get(i), temp.get(j))){
+					case -1:{ temp.remove(i);
+							break;}
+					case 1:{ temp.remove(j);
+						break;
+					}
+					}
+				}
+			}
+		}
+		pointsToScan = new Point[temp.size()];			//initializes pointsToScan
+		for (int i=0; i<pointsToScan.length; i++){		//populates it
+			pointsToScan[i]=temp.get(i);
+		}
+		
+
 	}
 
-	
+
 	/**
 	 * Sort the array points[] in the increasing order of polar angle with respect to lowestPoint.  
 	 * Use quickSort.  Construct an object of the pointComparator class with lowestPoint as the 
@@ -358,10 +390,13 @@ public class ConvexHull
 	 */
 	public void quickSort()
 	{
+		if (points == null || points.length == 0) {
+			return;
+		}
 		quickSortRec(0, points.length-1);
 	}
-	
-	
+
+
 	/**
 	 * Operates on the subarray of points[] with indices between first and last. 
 	 * 
@@ -370,46 +405,17 @@ public class ConvexHull
 	 */
 	private void quickSortRec(int lowerIndex, int higherIndex)
 	{
-		int i= lowerIndex;
-		int j= higherIndex;
-		//pivot is middle index
-		Point pivot = points[partition(lowerIndex, higherIndex)];
-		//Point pivot = points[6];
-		//divide into two arrays
-		while (i <= j){
-			//finds point on left of pivot which is greater and swaps 
-			//with a point on the left which is less than the pivot
-			while (pc.compare(points[i], pivot)<0){
-				i++;
-			}
-			while (pc.compare(pivot, points[j])<0){
-				j--;
-			}
-			if (i<=j){
-				swapPoints(i, j);
-				i++;
-				j--;
-			}
+		int idx = partition(lowerIndex, higherIndex);
+
+		if (lowerIndex < idx -1){
+			quickSortRec(lowerIndex, idx-1);
 		}
-		//recursion!
-		if (lowerIndex < j){
-			quickSortRec(lowerIndex, j);
-		}
-		if (i < higherIndex){
-			quickSortRec(i, higherIndex);
+
+		if(higherIndex > idx){
+			quickSortRec(idx, higherIndex);
 		}
 	}
-	
-	/**
-	 * quicksort helper method.
-	 * This method swaps points in the points[] array
-	 */
-	private void swapPoints(int i, int j){
-		Point temp = points[i];
-		points[i]=points[j];
-		points[j]=temp;
-		
-	}
+
 	/**
 	 * Operates on the subarray of points[] with indices between first and last.
 	 * 
@@ -418,9 +424,32 @@ public class ConvexHull
 	 * @return
 	 */
 	private int partition(int first, int last)
-	{
-		return first+(last-first)/2;
+	{	
+		pivot = points[first]; // taking first element as pivot
+
+		while (first <= last) {
+			//searching number which is greater than pivot, bottom up
+			while (pc.compare(points[first], pivot)<0) {
+				first++;
+			}
+			//searching number which is less than pivot, top down
+			while (pc.compare(points[last], pivot)>0) {
+				last--;
+			}
+
+			// swap the values
+			if (first <= last) {
+				Point tmp = points[first];
+				points[first] = points[last];
+				points[last] = tmp;
+
+				//increment left index and decrement right index
+				first++;
+				last--;
+			}
+		}
+		return first;
 	}	
-		
-			
+
+
 }

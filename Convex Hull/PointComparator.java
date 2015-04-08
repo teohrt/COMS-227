@@ -126,8 +126,8 @@ public class PointComparator implements Comparator<Point>
 	 */
 	private double polarAngleHelper(Point p1, Point p2){
 		//re-center points around reference point
-		Point newP1= new Point(p1.getX()+referencePoint.getX(), p1.getY()+referencePoint.getY());
-		Point newP2= new Point(p2.getX()+referencePoint.getX(), p2.getY()+referencePoint.getY());
+		Point newP1= new Point(p1.getX()-referencePoint.getX(), p1.getY()-referencePoint.getY());
+		Point newP2= new Point(p2.getX()-referencePoint.getX(), p2.getY()-referencePoint.getY());
 
 		//cross product logic
 		return (newP1.getX() * newP2.getY()) - (newP1.getY() * newP2.getX());
