@@ -190,7 +190,12 @@ public class ConvexHull
 		lowestPoint(); 	//step one
 		setUpScan();	//step two
 
-
+		for (int i=0; i<pointsToScan.length; i++){		//step 3
+			vertexStack.push(pointsToScan[i]);
+		}
+		
+		
+		
 	}
 
 
