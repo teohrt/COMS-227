@@ -80,7 +80,7 @@ public class ConvexHull
 	 * scanned so far.  At the end of the scan, it stores the hull vertices in the 
 	 * counterclockwise order. 
 	 */
-	private PureStack<Point> vertexStack;  
+	private PureStack<Point> vertexStack = new ArrayBasedStack();  
 
 	/**
 	 * PointComparator
@@ -182,20 +182,32 @@ public class ConvexHull
 	 *        hull is the point itself. 
 	 *     
 	 *     2) Or it could contain two points, in which case the hull is the line segment 
-	 *        connecting them.   
+	 *        connecting them.   	
 	 */
 	public void GrahamScan()
 	{
 		// TODO 
 		lowestPoint(); 	//step one
 		setUpScan();	//step two
-
-		for (int i=0; i<pointsToScan.length; i++){		//step 3
+		
+		Point previous;
+		Point temp;
+		
+		for (int i=0; i<2; i++){		//step 3 initializes scan
 			vertexStack.push(pointsToScan[i]);
 		}
+		PointComparator GrahamScanpc; // comparator for scan
 		
 		
+		for(int i=2; i<pointsToScan.length; i++){
+			previous=vertexStack.peek();
+			GrahamScanpc = new PointComparator(previous);
+			vertexStack.push(pointsToScan[i]);
+			if (GrahamScanpc.comparePolarAngle(pointsToScan[i], previous)>0){ //if left turn
+				
+			}
 		
+		}
 	}
 
 
@@ -219,6 +231,7 @@ public class ConvexHull
 	public String toString()
 	{
 		// TODO - not sorted according to specs
+		quickSort();
 		String s="";
 		int count=0;
 		for (int i=0; i<numPoints; i++){
@@ -263,6 +276,7 @@ public class ConvexHull
 	 */
 	public void hullToFile() throws IllegalStateException 
 	{
+		//todo
 if (hullVertices == null || hullVertices.length == 0) throw new IllegalStateException();	//obligatory throws
 		
 		try {
@@ -431,6 +445,7 @@ if (hullVertices == null || hullVertices.length == 0) throw new IllegalStateExce
 	 */
 	public void quickSort()
 	{
+		lowestPoint();
 		if (points == null || points.length == 0) {
 			return;
 		}
