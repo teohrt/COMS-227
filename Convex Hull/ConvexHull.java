@@ -35,8 +35,7 @@ public class ConvexHull
 	 * input from a file.  Duplicates may appear. 
 	 */
 	private ArrayList<Point> points2;
-	//visibility!!!!!!!!!!!!!!!!!!!!!!!!!!!!private
-	public Point[] points;    
+	private Point[] points;    
 	private int numPoints;            // size of points[]
 
 
@@ -44,15 +43,13 @@ public class ConvexHull
 	 * Lowest point from points[]; and in case of a tie, the leftmost one of all such points. 
 	 * To be set by the private method lowestPoint(). 
 	 */
-	//FIX VISIBILITY!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!private
-	public Point lowestPoint; 
+	private Point lowestPoint; 
 
 
 	/**
 	 * This array stores the same set of points from points[] with all duplicates removed. 
 	 */
-	//Fix visibility!!!!!!!!!!!!!!!!!!!!private
-	public Point[] pointsNoDuplicate; 
+	private Point[] pointsNoDuplicate; 
 	private int numDistinctPoints;    // size of pointsNoDuplicate[]
 
 
@@ -62,8 +59,7 @@ public class ConvexHull
 	 * pointsNoDuplicate[] have the same polar angle with respect to lowestPoint, only the one 
 	 * furthest away from lowestPoint is included. 
 	 */
-	//fiz visibility!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!private
-	public Point[] pointsToScan; 
+	private Point[] pointsToScan; 
 	private int numPointsToScan;     // size of pointsToScan[]
 
 
@@ -85,8 +81,7 @@ public class ConvexHull
 	/**
 	 * PointComparator
 	 */
-	//visibility!!!!!!!!!!!!private
-	public PointComparator pc;
+	private PointComparator pc;
 	private Point pivot;
 
 	// ------------
@@ -116,7 +111,7 @@ public class ConvexHull
 		}
 	}
 
-	/**
+	/**	
 	 * Read integers from an input file.  Every pair of integers represent the x- and y-coordinates 
 	 * of a point.  Generate the points and store them in the private array points[]. The total 
 	 * number of integers in the file must be even.
@@ -185,8 +180,7 @@ public class ConvexHull
 	 *        connecting them.   	
 	 */
 	public void GrahamScan()
-	{
-		// TODO 
+	{ 
 		lowestPoint(); 						//step one
 		setUpScan();						//step two
 
@@ -276,7 +270,6 @@ public class ConvexHull
 	 */
 	public void hullToFile() throws IllegalStateException 
 	{
-		//todo
 		if (hullVertices == null || hullVertices.length == 0) throw new IllegalStateException();	//obligatory throws
 
 		try {
