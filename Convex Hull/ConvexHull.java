@@ -187,30 +187,31 @@ public class ConvexHull
 	public void GrahamScan()
 	{
 		// TODO 
-		lowestPoint(); 	//step one
-		setUpScan();	//step two
-		
+		lowestPoint(); 						//step one
+		setUpScan();						//step two
+
+		PointComparator GrahamScanpc; 		//comparator for scan
 		Point previous;
-		Point temp;
-		
-		for (int i=0; i<2; i++){		//step 3 initializes scan
-			vertexStack.push(pointsToScan[i]);
-		}
-		PointComparator GrahamScanpc; // comparator for scan
-		
-		
-		for(int i=2; i<pointsToScan.length; i++){
+
+		vertexStack.push(pointsToScan[0]);	//step 3 initializes scan
+		vertexStack.push(pointsToScan[1]);
+
+		for(int i=3; i<pointsToScan.length; i++){ //graham scan
 			previous=vertexStack.peek();
 			GrahamScanpc = new PointComparator(previous);
 			vertexStack.push(pointsToScan[i]);
-			if (GrahamScanpc.comparePolarAngle(pointsToScan[i], previous)>0){ //if left turn
-				
+				if (i!=pointsToScan.length-1 && GrahamScanpc.comparePolarAngle(pointsToScan[i], pointsToScan[i+1])>0){ //if left turn
+					vertexStack.pop();
+				}
 			}
 		
+		numHullVertices = vertexStack.size();		//pops stack into array
+		hullVertices = new Point[numHullVertices];
+		for(int i=numHullVertices-1; i>=0; i--){
+			hullVertices[i]=vertexStack.peek();
+			vertexStack.pop();
 		}
 	}
-
-
 
 	// ------------------------------------------------------------
 	// toString() and Files for Convex Hull Plotting in Mathematica
@@ -230,7 +231,6 @@ public class ConvexHull
 	 */
 	public String toString()
 	{
-		// TODO - not sorted according to specs
 		quickSort();
 		String s="";
 		int count=0;
@@ -277,13 +277,14 @@ public class ConvexHull
 	public void hullToFile() throws IllegalStateException 
 	{
 		//todo
-if (hullVertices == null || hullVertices.length == 0) throw new IllegalStateException();	//obligatory throws
-		
+		if (hullVertices == null || hullVertices.length == 0) throw new IllegalStateException();	//obligatory throws
+
 		try {
 			PrintWriter pw = new PrintWriter("hullVertices.txt");
 			for (int i=0; i<hullVertices.length; i++){
 				pw.println(hullVertices[i].getX() + " " + hullVertices[i].getY());
 			}
+			pw.println(lowestPoint.getX() + " " + lowestPoint.getY());
 			pw.close();
 
 		} catch (FileNotFoundException e) {
@@ -307,7 +308,7 @@ if (hullVertices == null || hullVertices.length == 0) throw new IllegalStateExce
 	public void pointsToFile() throws IllegalStateException 
 	{
 		if (pointsNoDuplicate == null || pointsNoDuplicate.length == 0) throw new IllegalStateException();	//obligatory throws
-		
+
 		try {
 			PrintWriter pw = new PrintWriter("points.txt");
 			for (int i=0; i<pointsNoDuplicate.length; i++){
