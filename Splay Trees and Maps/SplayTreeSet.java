@@ -13,6 +13,8 @@ import java.util.NoSuchElementException;
  */
 public class SplayTreeSet<E extends Comparable<? super E>> extends AbstractSet<E>
 {
+	//for toString
+	private StringBuilder sb;
   // The root of the tree containing this set's items	
   Node<E> root;
 	
@@ -141,10 +143,46 @@ public class SplayTreeSet<E extends Comparable<? super E>> extends AbstractSet<E
   @Override
   public String toString()
   {
-	  // TODO
-	  return null; 
+	  sb = new StringBuilder();
+	  toStringHelper(sb, root, 0);
+	  return sb.toString(); 
   }
-
+  /**
+   * to string recursive helper method
+   */
+  private void toStringHelper(StringBuilder sb, Node<E> n, int d){
+	  spaceHelper(d); //spaces
+	 
+	  if (n.getLeft() ==null && n.getRight()==null){ // if leaf
+		  sb.append(n.toString() + "\n");
+		  return;
+	  }
+	   sb.append(n.toString() + "\n");
+	  
+	  if(n.getLeft()!=null){
+	  toStringHelper(sb, n.getLeft(), d+1);
+	  }
+	  if(n.getLeft()==null){
+		  spaceHelper(d+1);
+		  sb.append("null\n");
+	  }
+	  if (n.getRight()!=null){
+	  toStringHelper(sb, n.getRight(), d+1);
+	  }
+	  if(n.getRight()==null){
+		  spaceHelper(d+1);
+		  sb.append("null\n");
+	  }
+	  return;
+  }
+  /**
+   * toString helperhelper. spaces man. s p a c e s 
+   */
+  private void spaceHelper(int d){
+	  for(int i=0; i< (4 * d); i++){
+		  sb.append(" ");
+	  }
+  }
   /**
    * Splay at the current node.  This consists of a sequence of zig, zigZig, or zigZag 
    * operations until the current node is moved to the root of the tree.
