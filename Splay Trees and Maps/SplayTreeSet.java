@@ -4,6 +4,8 @@ import java.util.AbstractSet;
 import java.util.Iterator;
 import java.util.NoSuchElementException;
 
+import javax.management.RuntimeErrorException;
+
 /**
  *
  * Splay tree implementation of the Set interface.  The contains() and
@@ -110,7 +112,6 @@ public class SplayTreeSet<E extends Comparable<? super E>> extends AbstractSet<E
 		return null; 
 	}
 
-
 	/**
 	 * Returns the successor of the given node.
 	 * @param n
@@ -193,101 +194,73 @@ public class SplayTreeSet<E extends Comparable<? super E>> extends AbstractSet<E
 	}
 
 	/**
-	 * rotation. left child to parent
-	 */
-	private void leftToParent(Node<E> child, Node<E> parent){
-		if ((child == null) || (parent==null) || (parent.getLeft() != child)) throw new RuntimeException();
-
-		if(parent.getParent() != null){
-			if (parent == parent.getParent().getLeft()){
-				parent.getParent().setLeft(child);
-			}
-			else{
-				parent.getParent().setRight(child);
-			}
-			if(child.getRight()!= null){
-				child.getRight().setParent(parent);
-			}
-			child.setParent(parent.getParent());
-			parent.setParent(child);
-			parent.setLeft(child.getRight());
-			child.setRight(parent);
-		}
-	}
-	/**
-	 * rotation. right child to parent
-	 */
-	private void rightToParent(Node<E> child, Node<E> parent){
-		if ((child == null) || (parent==null) || (parent.getLeft() != child)) throw new RuntimeException();
-
-		if(parent.getParent() != null){
-			if (parent == parent.getParent().getLeft()){
-				parent.getParent().setLeft(child);
-			}
-			else{
-				parent.getParent().setRight(child);
-			}
-			if(child.getLeft()!= null){
-				child.getLeft().setParent(parent);
-			}
-			child.setParent(parent.getParent());
-			parent.setParent(child);
-			parent.setRight(child.getLeft());
-			child.setLeft(parent);
-		}
-	}
-	/**
 	 * Splay at the current node.  This consists of a sequence of zig, zigZig, or zigZag 
 	 * operations until the current node is moved to the root of the tree.
 	 * @param current  node at which to splay.
 	 */
 	protected void splay(Node<E> current)
 	{
-		// TODO
-		while(current.getParent() != null){
+		while(current.getParent() != null) 							//while not root
+		{
 			Node<E> Parent = current.getParent();
 			Node<E> GrandParent = Parent.getParent();
-			if (GrandParent == null){
-				if (current == Parent.getLeft()){
-					leftToParent(current, Parent);
-				}
-				else{
-					rightToParent(current, Parent);
-				}
+
+			if (GrandParent == null) 								//if parent is root
+			{
+				zig(current);										//zig
+
 			}
-			else{
-				if(current==Parent.getLeft()){
-					if (Parent == GrandParent.getLeft()){
-						leftToParent(Parent, GrandParent);
-						leftToParent(current, Parent);
+			else													//if parent is not root
+			{
+				if(current==Parent.getLeft())						//if current is left child
+				{
+					if (Parent == GrandParent.getLeft())			//if parent is left child
+					{
+						zigZig(current);							//zigzig
 					}
-					else{
-						leftToParent(current, current.getParent());
-						rightToParent(current, current.getParent());
+					else											//if parent is right child
+					{
+						zigZag(current);							//zigzag
 					}
 				}
-				else{
-					if(Parent==GrandParent.getLeft()){
-						rightToParent(current, current.getParent());
-						leftToParent(current, current.getParent());
+				else												//if if current is right child
+				{
+					if(Parent==GrandParent.getLeft())				//if parent is left child
+					{
+						zigZag(current);							//zigZag
 					}
-					else{
-						rightToParent(Parent, GrandParent);
-						rightToParent(current, Parent);
+					else											//if parent is right child
+					{
+						zigZig(current);							//zigZig
 					}
 				}
 			}
 		}
-		root=current;
 	}	
 
 	/**
 	 * Performs the zig operation on a node.
 	 * @param current  node at which to perform the zig operation.
 	 */
+
 	protected void zig(Node<E> current)
 	{
-		// TODO
+		Node<E> parent = current.getParent();
+		if (parent.getParent()!=null) throw new RuntimeException(); //parent must be the root
+
+		if (parent.getLeft()==current){ 							//if current is the left child
+			parent.setLeft(current.getRight());
+			current.setRight(parent);
+			parent.setParent(current);
+		}
+		else if (parent.getRight()==current){ 						//if right child
+			parent.setRight(current.getLeft());
+			current.setLeft(parent);
+			parent.setParent(current);
+		}
+
+		current.setParent(null);
+		root=current;
 	}
 
 	/**
@@ -296,7 +269,45 @@ public class SplayTreeSet<E extends Comparable<? super E>> extends AbstractSet<E
 	 */
 	protected void zigZig(Node<E> current)
 	{
-		// TODO
+		Node<E> parent = current.getParent();
+		Node<E> grandParent = parent.getParent();
+		Node<E> temp;
+
+		if (parent==root) throw new RuntimeException();						 //parent can't be the root
+
+		if(grandParent!=root){ 												//set grandparent's children
+			if (grandParent.getParent().getLeft()==grandParent){ 			//if grandParent is left child
+				grandParent.getParent().setLeft(current);					//set great grandParen'ts left child to current
+			}
+			else{
+				grandParent.getParent().setRight(current);  				//set great grandparen'ts right child to current
+			}
+		}
+
+		if (parent.getLeft()==current && grandParent.getLeft()==parent){ 	//if left zigzig
+			temp = parent.getRight();
+			parent.setRight(grandParent);
+			parent.setLeft(current.getRight());
+			grandParent.setLeft(temp);
+			current.setRight(parent);
+			current.setParent(grandParent.getParent());
+
+
+		}
+		else if (parent.getRight()==current && grandParent.getRight()==parent){//if right zigzig
+			temp = parent.getLeft();
+			parent.setLeft(grandParent);
+			parent.setRight(current.getLeft());
+			grandParent.setRight(temp);
+			current.setLeft(parent);
+			current.setParent(grandParent.getParent());
+
+		}
+
+		if(current.getParent()==null) root=current;							 //if finished, set to root
+
+
+
 	}
 
 	/**
@@ -306,6 +317,39 @@ public class SplayTreeSet<E extends Comparable<? super E>> extends AbstractSet<E
 	protected void zigZag(Node<E> current)
 	{
 		// TODO
+		Node<E> parent = current.getParent();
+		Node<E> grandParent = parent.getParent();
+
+		if(parent==root) throw new RuntimeException(); //parent can't be root
+
+		if(grandParent!=root){ 										//set grandparent's children if not root
+			if (grandParent.getParent().getLeft()==grandParent){ //if grandParent is left child
+				grandParent.getParent().setLeft(current);		//set great grandParen'ts left child to current
+			}
+			else{
+				grandParent.getParent().setRight(current);  	//set great grandparen'ts right child to current
+			}
+		}
+
+		if(parent.getRight()==current){ 						// current is right child, and parent left child
+			grandParent.setLeft(current.getRight());
+			parent.setRight(current.getLeft());
+			current.setRight(grandParent);
+			current.setLeft(parent);
+			current.setParent(grandParent.getParent());
+
+		}
+		else{ 													// current is left child and parent is right child
+			grandParent.setRight(current.getLeft());
+			parent.setLeft(current.getRight());
+			current.setLeft(grandParent);
+			current.setRight(parent);
+			current.setParent(grandParent.getParent());
+		}
+
+		if(current.getParent()==null) root=current; 			//if finished, set to root
+
+
 	}    
 
 	/**
@@ -320,7 +364,7 @@ public class SplayTreeSet<E extends Comparable<? super E>> extends AbstractSet<E
 
 		public SplayTreeIterator()
 		{
-			// TODO
+			// TODO a go
 		}
 
 		@Override
