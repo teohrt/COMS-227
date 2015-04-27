@@ -58,19 +58,14 @@ public class SplayTreeSet<E extends Comparable<? super E>> extends AbstractSet<E
 	@Override
 	public boolean contains(Object obj)
 	{	  
-		Node<E> cur = root;
-		while(cur != null){
-			if (cur.getData().compareTo((E) obj)<0){		//if cur is bigger than object
-				cur=cur.getRight();
-			}
-			else if(cur.getData().compareTo((E) obj)>0){	//if cur is less than object
-				cur=cur.getLeft();
-			}
-			else
-				return true;
+		if (findEntry((E) obj)!=null){
+			return true;
 		}
-		return false;
+		else{
+			return false;
+		}
 	}
+
 
 	/**
 	 * Inserts an element into the splay tree. In case the element was not contained, this  
@@ -108,8 +103,24 @@ public class SplayTreeSet<E extends Comparable<? super E>> extends AbstractSet<E
 	 */
 	protected Node<E> findEntry(E key)
 	{
-		// TODO
-		return null; 
+		Node<E> cur = root;
+		Node<E> prev = null;
+		while(cur != null){
+			if (cur.getData().compareTo(key)<0){		//if cur is bigger than object
+				prev=cur;
+				cur=cur.getRight();
+			}
+			else if(cur.getData().compareTo(key)>0){	//if cur is less than object
+				prev=cur;
+				cur=cur.getLeft();
+			}
+			else{
+				splay(cur);
+				return cur;
+			}
+		}
+		splay(prev);
+		return null;
 	}
 
 	/**
