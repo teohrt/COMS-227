@@ -78,7 +78,37 @@ public class SplayTreeSet<E extends Comparable<? super E>> extends AbstractSet<E
 	public boolean add(E key)
 	{
 		// TODO
-		return true; 
+		if (findEntry(key)!=null){
+			return false; //already exists
+		}
+		else{
+
+			Node<E> newNode = new Node<E>(key);
+			Node<E> cur = root;
+			Node<E> prev = null;
+			while(cur != null){
+				if (cur.getData().compareTo(key)<0){		//if cur is bigger than object then iterate
+					prev =cur;
+					cur=cur.getRight();
+				}
+				else if(cur.getData().compareTo(key)>0){	//if cur is less than object then iterate
+					prev=cur;
+					cur=cur.getLeft();
+				}
+			}
+			if (key.compareTo(prev.getData())>0){			//if key is bigger than current node 
+				prev.setRight(newNode);
+				newNode.setParent(prev);
+				splay(newNode);
+				return true;
+			}
+			else{											//key is less than current node
+				prev.setLeft(newNode);
+				newNode.setParent(prev);
+				splay(newNode);
+				return true;
+			}
+		}
 	}
 
 	/**
@@ -106,11 +136,11 @@ public class SplayTreeSet<E extends Comparable<? super E>> extends AbstractSet<E
 		Node<E> cur = root;
 		Node<E> prev = null;
 		while(cur != null){
-			if (cur.getData().compareTo(key)<0){		//if cur is bigger than object
+			if (cur.getData().compareTo(key)<0){		//if key is bigger than cur
 				prev=cur;
 				cur=cur.getRight();
 			}
-			else if(cur.getData().compareTo(key)>0){	//if cur is less than object
+			else if(cur.getData().compareTo(key)>0){	//if key is less than cur
 				prev=cur;
 				cur=cur.getLeft();
 			}
@@ -262,12 +292,22 @@ public class SplayTreeSet<E extends Comparable<? super E>> extends AbstractSet<E
 		if (parent.getLeft()==current){ 							//if current is the left child
 			parent.setLeft(current.getRight());
 			current.setRight(parent);
+
 			parent.setParent(current);
+			if (parent.getLeft()!= null){
+				parent.getLeft().setParent(parent);
+			}
+
+
 		}
 		else if (parent.getRight()==current){ 						//if right child
 			parent.setRight(current.getLeft());
 			current.setLeft(parent);
+
 			parent.setParent(current);
+			if (parent.getRight()!=null){
+				parent.getRight().setParent(parent);
+			}
 		}
 
 		current.setParent(null);
@@ -301,8 +341,16 @@ public class SplayTreeSet<E extends Comparable<? super E>> extends AbstractSet<E
 			parent.setLeft(current.getRight());
 			grandParent.setLeft(temp);
 			current.setRight(parent);
-			current.setParent(grandParent.getParent());
 
+			current.setParent(grandParent.getParent());
+			parent.setParent(current);
+			grandParent.setParent(current);
+			if (parent.getLeft()!=null){
+				parent.getLeft().setParent(parent);
+			}
+			if (grandParent.getLeft()!=null){
+				grandParent.getLeft().setParent(grandParent);
+			}
 
 		}
 		else if (parent.getRight()==current && grandParent.getRight()==parent){//if right zigzig
@@ -311,8 +359,16 @@ public class SplayTreeSet<E extends Comparable<? super E>> extends AbstractSet<E
 			parent.setRight(current.getLeft());
 			grandParent.setRight(temp);
 			current.setLeft(parent);
-			current.setParent(grandParent.getParent());
 
+			current.setParent(grandParent.getParent());
+			parent.setParent(current);
+			grandParent.setParent(current);
+			if (parent.getRight()!=null){
+				parent.getRight().setParent(parent);
+			}
+			if (grandParent.getRight()!=null){
+				grandParent.getRight().setParent(grandParent);
+			}
 		}
 
 		if(current.getParent()==null) root=current;							 //if finished, set to root
@@ -336,9 +392,11 @@ public class SplayTreeSet<E extends Comparable<? super E>> extends AbstractSet<E
 		if(grandParent!=root){ 										//set grandparent's children if not root
 			if (grandParent.getParent().getLeft()==grandParent){ //if grandParent is left child
 				grandParent.getParent().setLeft(current);		//set great grandParen'ts left child to current
+				current.setParent(grandParent.getParent());
 			}
 			else{
 				grandParent.getParent().setRight(current);  	//set great grandparen'ts right child to current
+				current.setParent(grandParent.getParent());
 			}
 		}
 
@@ -347,15 +405,32 @@ public class SplayTreeSet<E extends Comparable<? super E>> extends AbstractSet<E
 			parent.setRight(current.getLeft());
 			current.setRight(grandParent);
 			current.setLeft(parent);
-			current.setParent(grandParent.getParent());
 
+			current.setParent(grandParent.getParent());
+			parent.setParent(current);
+			grandParent.setParent(current);
+			if (parent.getRight()!=null){
+				parent.getRight().setParent(parent);
+			}
+			if (grandParent.getLeft()!=null){
+				grandParent.getLeft().setParent(grandParent);
+			}
 		}
 		else{ 													// current is left child and parent is right child
 			grandParent.setRight(current.getLeft());
 			parent.setLeft(current.getRight());
 			current.setLeft(grandParent);
 			current.setRight(parent);
+
 			current.setParent(grandParent.getParent());
+			parent.setParent(current);
+			grandParent.setParent(current);
+			if (parent.getLeft()!=null){
+				parent.getLeft().setParent(parent);
+			}
+			if (grandParent.getRight()!=null){
+				grandParent.getRight().setParent(grandParent);
+			}
 		}
 
 		if(current.getParent()==null) root=current; 			//if finished, set to root
