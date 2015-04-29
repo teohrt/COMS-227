@@ -176,7 +176,6 @@ public class SplayTreeSet<E extends Comparable<? super E>> extends AbstractSet<E
 
 	/**
 	 * Returns the successor of the given node.
-	 * @param n
 	 * @return the successor of the given node in this tree, 
 	 *   or null if there is no successor
 	 */
@@ -188,6 +187,7 @@ public class SplayTreeSet<E extends Comparable<? super E>> extends AbstractSet<E
 			while(m.getRight()!=null){
 				m=m.getLeft();
 			}
+			return m;
 		}
 
 		//if n doesnt have a right child, it is the next ancestor to which 
@@ -240,18 +240,15 @@ public class SplayTreeSet<E extends Comparable<? super E>> extends AbstractSet<E
 				}
 				//n is left child
 				else{
-					//n is left child
-					if (n.getLeft()!=null){
-						//n has right child
-						if (n.getRight()!=null){
-							n.getParent().setLeft(n.getRight());
-							n=null;
-						}
-						//n has left child
-						else{
-							n.getParent().setLeft(n.getLeft());
-							n=null;
-						}
+					//n has right child
+					if (n.getRight()!=null){
+						n.getParent().setLeft(n.getRight());
+						n=null;
+					}
+					//n has left child
+					else{
+						n.getParent().setLeft(n.getLeft());
+						n=null;
 					}
 				}
 			}
@@ -544,22 +541,26 @@ public class SplayTreeSet<E extends Comparable<? super E>> extends AbstractSet<E
 		@Override
 		public boolean hasNext()
 		{
-			// TODO
-			return true; 
+			if (successor(cursor)!=null){
+				return true;
+			}
+			return false;
 		}
 
 		@Override
 		public E next()
 		{
-			// TODO
-			return null; 
+			cursor=successor(cursor);
+			return (E) successor(cursor);
 		}
 
 		@Override
 		public void remove()
 		{
-			// TODO
+			SplayTreeSet.this.remove(cursor);
+			cursor=successor(cursor);
+
 		}
 	}
 }
-	
+
