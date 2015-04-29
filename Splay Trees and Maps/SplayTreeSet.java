@@ -124,15 +124,19 @@ public class SplayTreeSet<E extends Comparable<? super E>> extends AbstractSet<E
 		Node<E> cur = root;
 		Node<E> prev = null;
 		while(cur != null){
-			if (cur.getData().compareTo((E) obj)<0){		//if key is bigger than cur
+			if (cur.getData().compareTo(((Node<E>) obj).getData())<0){		//if key is bigger than cur
 				prev=cur;
 				cur=cur.getRight();
 			}
-			else if(cur.getData().compareTo((E) obj)>0){	//if key is less than cur
+			else if(cur.getData().compareTo(((Node<E>) obj).getData())>0){	//if key is less than cur
 				prev=cur;
 				cur=cur.getLeft();
 			}
 			else{
+				if (cur==root){
+					unlinkNode(cur);
+					return true;
+				}
 				unlinkNode(cur);
 				splay(prev);
 				return true;
@@ -188,7 +192,25 @@ public class SplayTreeSet<E extends Comparable<? super E>> extends AbstractSet<E
 	 */
 	protected void unlinkNode(Node<E> n)
 	{
-		// TODO
+		//if root
+		if (n==root){
+			//TODO
+		}
+		//if leaf
+		if (n.getRight()==null && n.getLeft()==null){
+			//if right child
+			if (n.getParent().getRight()==n){
+				n.getParent().setRight(null);
+			}
+			//left child
+			else{
+				n.getParent().setLeft(null);
+			}
+		}
+		//not leaf
+		else{ 
+			
+		}
 	}
 
 	@Override
