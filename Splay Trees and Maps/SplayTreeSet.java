@@ -121,8 +121,25 @@ public class SplayTreeSet<E extends Comparable<? super E>> extends AbstractSet<E
 	@Override
 	public boolean remove(Object obj)
 	{
-		// TODO
-		return true; 
+		Node<E> cur = root;
+		Node<E> prev = null;
+		while(cur != null){
+			if (cur.getData().compareTo((E) obj)<0){		//if key is bigger than cur
+				prev=cur;
+				cur=cur.getRight();
+			}
+			else if(cur.getData().compareTo((E) obj)>0){	//if key is less than cur
+				prev=cur;
+				cur=cur.getLeft();
+			}
+			else{
+				unlinkNode(cur);
+				splay(prev);
+				return true;
+			}
+		}
+		splay(cur);
+		return false; 
 	}
 
 	/**
@@ -474,3 +491,4 @@ public class SplayTreeSet<E extends Comparable<? super E>> extends AbstractSet<E
 		}
 	}
 }
+
