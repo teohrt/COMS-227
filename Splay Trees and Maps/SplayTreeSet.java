@@ -102,7 +102,7 @@ public class SplayTreeSet<E extends Comparable<? super E>> extends AbstractSet<E
 				splay(newNode);
 				return true;
 			}
-			else{											//key is less than current node
+			else{											//key is less than current nodeat's
 				prev.setLeft(newNode);
 				newNode.setParent(prev);
 				splay(newNode);
@@ -182,6 +182,18 @@ public class SplayTreeSet<E extends Comparable<? super E>> extends AbstractSet<E
 	 */
 	protected Node<E> successor(Node<E> n)
 	{
+		//if n has a right child, the successor is the left-most child of it
+		Node<E> m=n.getLeft();
+		if(m!=null){
+			while(m.getRight()!=null){
+				m=m.getLeft();
+			}
+		}
+
+		//if n doesnt have a right child, it is the next ancestor to which 
+		//n is the right child
+
+		//otherwise there is no successor remaining
 		return n.getParent(); 
 	}
 
@@ -201,15 +213,48 @@ public class SplayTreeSet<E extends Comparable<? super E>> extends AbstractSet<E
 			//if right child
 			if (n.getParent().getRight()==n){
 				n.getParent().setRight(null);
+				n=null;
 			}
 			//left child
 			else{
 				n.getParent().setLeft(null);
+				n=null;
 			}
 		}
 		//not leaf
 		else{ 
-			
+			//if has one child
+			if (n.getRight()!=null && n.getLeft()==null || n.getRight()==null && n.getLeft()!=null){
+				//n  is rightchild of parent
+				if (n.getParent().getRight()==n){
+					//n has right child
+					if (n.getRight()!=null){
+						n.getParent().setRight(n.getRight());
+						n=null;
+					}
+					//n has left child
+					else{
+						n.getParent().setRight(n.getLeft());
+						n=null;
+					}
+				}
+				//n is left child
+				else{
+					//n is left child
+					if (n.getLeft()!=null){
+						//n has right child
+						if (n.getRight()!=null){
+							n.getParent().setLeft(n.getRight());
+							n=null;
+						}
+						//n has left child
+						else{
+							n.getParent().setLeft(n.getLeft());
+							n=null;
+						}
+					}
+				}
+			}
 		}
 	}
 
@@ -489,7 +534,11 @@ public class SplayTreeSet<E extends Comparable<? super E>> extends AbstractSet<E
 
 		public SplayTreeIterator()
 		{
-			// TODO a go
+			Node<E> n = root;
+			while(n.getLeft()!=null){
+				n=n.getLeft();
+			}
+			cursor=n;
 		}
 
 		@Override
@@ -513,4 +562,4 @@ public class SplayTreeSet<E extends Comparable<? super E>> extends AbstractSet<E
 		}
 	}
 }
-
+	
